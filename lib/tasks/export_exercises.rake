@@ -9,6 +9,7 @@ namespace :purgatory do
       solution_frame_path = "app/purgatory_challenges/" + name + ".rb"
 
       solution_frame = File.read(exercise)
+      level = solution_frame.scan(/(LEVEL = \d)/).flatten.first[-1]
 
       spec_path = Dir[Rails.root.join("app/purgatory_challenges/_spec/staged_specs/*.rb")].select { |spec| spec.include?(name)}.first
 
@@ -16,13 +17,13 @@ namespace :purgatory do
 
       spec_path = "app/purgatory_challenges/_spec/" + name + "_spec.rb"
 
-      [name, spec, spec_path, solution_frame, solution_frame_path]
+      [name, spec, spec_path, solution_frame, solution_frame_path, level]
     end
 
     exercise_file = "../rails_purgatory/data/exercises.csv"
 
     CSV.open(exercise_file, "w")  do |csv|
-      csv << ["name", "spec", "spec_path", "solution_frame", "solution_frame_path"]
+      csv << ["name", "spec", "spec_path", "solution_frame", "solution_frame_path", "level"]
       rows.each do |row|
         csv << row
         puts "Exported exercise #{row.first.capitalize}."
